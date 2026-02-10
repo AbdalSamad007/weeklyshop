@@ -1,52 +1,91 @@
 # WeeklyShop 🛒
 **Set it once. Shop every week.**
 
-WeeklyShop is a family shopping list app that automatically resets every week from a master list, so you never have to rebuild the same grocery list again.
+WeeklyShop is a family shopping list app that automatically resets every week from a master list. It removes the need to recreate the same grocery list repeatedly and simplifies the weekly shopping routine for households.
 
-> Status: In active development (MVP phase)
+> Status: Active development (MVP phase)
 
 ---
 
-## Overview
-Most shopping list apps require users to:
+## Problem
+Most households buy many of the same groceries every week:
+- Milk
+- Bread
+- Eggs
+- Fruit
+- Household essentials
+
+However, most shopping list apps require users to:
 - Recreate the same list every week, or
 - Manually clear and duplicate lists
 
-WeeklyShop introduces a simple, repeatable workflow:
+This creates unnecessary friction in a task that should be simple and repeatable.
+
+---
+
+## Solution
+WeeklyShop introduces a structured weekly cycle:
 
 **Master List (recurring items)**  
 → **Weekly List (active shopping list)**  
-→ **Automatic weekly reset**  
+→ **Weekly reset**  
 → Repeat
 
-This removes repetitive setup and makes weekly shopping effortless.
+This ensures:
+- Core items are always present
+- Temporary items do not clutter future lists
+- Families can collaborate on one shared list
+
+---
+
+## Core Concepts
+
+### Master List
+A permanent list of recurring items that form the base of each week’s shopping list.
+
+### Weekly List
+The active shopping list for the current week.  
+Generated automatically from the Master List.
+
+### Temporary Items
+Items added for one week only (e.g., snacks, special ingredients).
 
 ---
 
 ## Core Features (MVP)
 - Master list for recurring grocery items
-- Weekly list generated automatically
-- Temporary items that last for one week only
-- Simple shopping mode with quick check-off
-- Manual weekly reset (auto-reset planned)
+- Weekly list generated from master list
+- Temporary items that last one week only
+- Simple shopping mode
+- Manual weekly reset
 
 ---
 
 ## Planned Features
 - Family sharing with real-time sync
-- Multiple households (e.g., Home, Work, Uni)
-- Home screen widgets
-- Optional smart suggestions
+- Multiple households
+- Widgets for quick access
+- Optional smart restock suggestions
+- Custom weekly reset schedule
+
+---
+
+## Target Users
+WeeklyShop is designed for:
+- Families sharing grocery responsibilities
+- Couples managing a household
+- Students or shared housing
+- Anyone with a repeating weekly shop
 
 ---
 
 ## Tech Stack
-- **Platform:** iOS
-- **Language:** Swift
-- **UI:** SwiftUI
-- **Architecture:** MVVM
-- **Local storage:** SwiftData (or Core Data)
-- **Sync (planned):** CloudKit
+- Platform: iOS
+- Language: Swift
+- UI Framework: SwiftUI
+- Architecture: MVVM
+- Local Storage: SwiftData (or Core Data)
+- Sync (planned): CloudKit
 
 ---
 
@@ -63,17 +102,28 @@ ios/
 
 ---
 
+## Development Philosophy
+WeeklyShop follows a **minimal, focused product approach**:
+
+- Solve one core problem extremely well
+- Keep the interface simple and fast
+- Avoid unnecessary complexity
+- Build incrementally from a strong MVP
+
+---
+
 ## Roadmap
-See the full development plan:  
+Full roadmap available at:
 `docs/roadmap.md`
 
 ---
 
 ## Architecture
-High-level system design:  
+High-level design:
 `docs/architecture.md`
 
 ---
 
 ## License
 MIT License (to be added).
+
