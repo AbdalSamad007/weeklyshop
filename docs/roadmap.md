@@ -1,52 +1,72 @@
 # WeeklyShop Roadmap
 
-This document outlines the planned development stages for WeeklyShop.
+This roadmap outlines the planned development stages from MVP to full release.
+
+The focus is on delivering value early while keeping the architecture simple and scalable.
 
 ---
 
 ## v0.1 — Local MVP
-Goal: Core weekly reset functionality with no sharing.
+Goal: Deliver the core weekly reset experience with no syncing.
 
-Features:
-- Master list (create, edit, delete items)
-- Weekly list generated from master list
-- Temporary vs recurring items
+Key features:
+- Master List (create, edit, delete items)
+- Weekly List generated from Master List
+- Temporary vs recurring item logic
 - Manual reset button
 - Basic shopping mode UI
+
+Success criteria:
+- User can set up a weekly list once
+- Reset produces a clean list each week
+- No data loss or duplication bugs
 
 ---
 
 ## v0.2 — Family Sharing
-Goal: Real-time shared shopping lists.
+Goal: Enable real-time collaboration between household members.
 
-Features:
+Key features:
 - Household creation
-- Invite family members
+- Invite members
 - Shared weekly list
-- Real-time syncing
-- Basic conflict handling (last write wins)
+- Real-time updates across devices
+- Conflict handling (initial: last write wins)
+
+Success criteria:
+- Multiple users can edit the same list
+- Changes sync within seconds
+- No major data conflicts
 
 ---
 
-## v0.3 — Polish & Quality
-Goal: Improve user experience and performance.
+## v0.3 — UX Polish
+Goal: Improve usability, performance, and visual quality.
 
-Features:
+Key features:
 - Home screen widgets
-- Optional notifications
-- UI animations
+- Optional reminders
+- UI animations and transitions
 - Accessibility improvements
 - Performance optimizations
+
+Success criteria:
+- Smooth, responsive UI
+- App feels production-ready
 
 ---
 
 ## v1.0 — App Store Release
-Goal: Production-ready public release.
+Goal: Public release on the App Store.
 
-Features:
+Key features:
 - Onboarding flow
 - Privacy policy
 - App Store screenshots
-- TestFlight testing
-- Bug fixes and stability improvements
+- TestFlight beta testing
+- Stability and bug fixes
 
+Success criteria:
+- Approved on App Store
+- Stable performance
+- Positive early user feedback
