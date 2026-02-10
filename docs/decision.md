@@ -1,14 +1,15 @@
 # Technical Decisions
 
-This document explains key technical choices made during development.
+This document explains the reasoning behind major technical choices.
 
 ---
 
 ## SwiftUI
-SwiftUI was chosen because:
-- It is Apple’s modern UI framework
-- Enables faster UI development
-- Integrates well with SwiftData and CloudKit
+Chosen because:
+- Modern Apple UI framework
+- Faster UI iteration
+- Cleaner declarative syntax
+- Native integration with new iOS APIs
 
 ---
 
@@ -16,35 +17,48 @@ SwiftUI was chosen because:
 MVVM was selected to:
 - Separate UI from business logic
 - Improve maintainability
-- Make the code easier to test and scale
+- Make the code easier to test
+- Allow future scaling
 
 ---
 
 ## Local Persistence
-The app will start with:
-- SwiftData (preferred) or Core Data
+Initial storage will use:
+- SwiftData (preferred)
+- Core Data (fallback)
 
 Reasons:
-- Offline-first design
+- Offline-first experience
 - Fast local performance
-- Native iOS support
+- Native Apple support
 
 ---
 
 ## CloudKit for Sync (Planned)
 CloudKit was chosen because:
-- Native Apple solution
-- Built-in sharing features
+- Native iOS integration
+- Built-in data sharing
 - No separate backend required
-- Good fit for family-based data
+- Suitable for small family datasets
 
 ---
 
-## MVP-First Approach
-Development will focus on:
-1. Core weekly reset functionality
-2. Simple, clean user experience
-3. Gradual feature additions
+## Offline-First Approach
+The app is designed to:
+- Work fully offline
+- Sync changes when network is available
+- Avoid reliance on constant connectivity
 
-This reduces complexity and speeds up time to first release.
+This improves reliability during shopping trips.
 
+---
+
+## MVP-First Development Strategy
+Development will follow a staged approach:
+
+1. Build a strong local-only core
+2. Add sharing and sync
+3. Polish the user experience
+4. Release publicly
+
+This reduces complexity and shortens time to first usable version.
