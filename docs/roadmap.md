@@ -6,20 +6,19 @@ The focus is on delivering value early while keeping the architecture simple and
 
 ---
 
-## v0.1 — Local MVP
-Goal: Deliver the core weekly reset experience with no syncing.
+## v0.1 — Local MVP Foundation ✅
+Status: Completed
 
-Key features:
-- Master List (create, edit, delete items)
-- Weekly List generated from Master List
-- Temporary vs recurring item logic
-- Manual reset button
-- Basic shopping mode UI
+Goal: Establish core app structure and navigation.
 
-Success criteria:
-- User can set up a weekly list once
-- Reset produces a clean list each week
-- No data loss or duplication bugs
+Completed features:
+- SwiftUI iOS project setup
+- Tab-based navigation (Weekly, Master, Settings)
+- Core data model (ShoppingItem)
+- Clean project architecture
+
+Result:
+A stable app foundation ready for feature development.
 
 ---
 
