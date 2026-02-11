@@ -3,7 +3,7 @@
 
 WeeklyShop is a family shopping list app that automatically resets every week from a master list. It removes the need to recreate the same grocery list repeatedly and simplifies the weekly shopping routine for households.
 
-> Status: Active development (MVP phase)
+> Status: v0.1 – Phase 1 complete (app foundation finished)
 
 ---
 
@@ -58,6 +58,22 @@ Items added for one week only (e.g., snacks, special ingredients).
 - Temporary items that last one week only
 - Simple shopping mode
 - Manual weekly reset
+
+---
+
+## Development Status
+
+### v0.1 – Phase 1 Complete
+The foundational app structure is now complete:
+
+- iOS SwiftUI project initialized
+- Tab-based navigation (Weekly, Master, Settings)
+- Core data model created
+- Project structure organized into App, Features, and Models
+- Phase 1 pushed with clean commit history
+
+Next milestone:  
+**v0.2 – Working weekly shopping list (add, check, delete, reset).**
 
 ---
 
