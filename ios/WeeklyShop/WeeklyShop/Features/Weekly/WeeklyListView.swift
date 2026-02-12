@@ -255,6 +255,3 @@ struct WeeklyListView: View {
 }
 
 
-
-
-// TERMINAL TEST
