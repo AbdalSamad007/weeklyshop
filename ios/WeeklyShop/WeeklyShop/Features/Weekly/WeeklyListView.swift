@@ -21,23 +21,33 @@ struct WeeklyListView: View {
 
     var body: some View {
         NavigationStack {
-            List {
-                ForEach(weeklyItems) { item in
-                    HStack(spacing: 12) {
-                        Button {
-                            item.isChecked.toggle()
-                        } label: {
-                            Image(systemName: item.isChecked ? "checkmark.circle.fill" : "circle")
-                                .foregroundStyle(item.isChecked ? .green : .gray)
-                        }
-                        .buttonStyle(.plain)
+            Group {
+                if weeklyItems.isEmpty {
+                    ContentUnavailableView(
+                        "No items this week",
+                        systemImage: "cart",
+                        description: Text("Add items from your master list to get started.")
+                    )
+                } else {
+                    List {
+                        ForEach(weeklyItems) { item in
+                            HStack(spacing: 12) {
+                                Button {
+                                    item.isChecked.toggle()
+                                } label: {
+                                    Image(systemName: item.isChecked ? "checkmark.circle.fill" : "circle")
+                                        .foregroundStyle(item.isChecked ? .green : .gray)
+                                }
+                                .buttonStyle(.plain)
 
-                        Text(item.name)
-                            .strikethrough(item.isChecked)
-                            .foregroundStyle(item.isChecked ? .secondary : .primary)
+                                Text(item.name)
+                                    .strikethrough(item.isChecked)
+                                    .foregroundStyle(item.isChecked ? .secondary : .primary)
+                            }
+                        }
+                        .onDelete(perform: deleteWeeklyItems)
                     }
                 }
-                .onDelete(perform: deleteWeeklyItems)
             }
             .navigationTitle("WeeklyShop")
             .toolbar {

@@ -17,11 +17,21 @@ struct MasterListView: View {
 
     var body: some View {
         NavigationStack {
-            List {
-                ForEach(items) { item in
-                    Text(item.name)
+            Group {
+                if items.isEmpty {
+                    ContentUnavailableView(
+                        "No master items",
+                        systemImage: "list.bullet",
+                        description: Text("Add items you regularly buy.")
+                    )
+                } else {
+                    List {
+                        ForEach(items) { item in
+                            Text(item.name)
+                        }
+                        .onDelete(perform: deleteItems)
+                    }
                 }
-                .onDelete(perform: deleteItems)
             }
             .navigationTitle("Master List")
             .toolbar {
