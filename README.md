@@ -1,4 +1,4 @@
-WeeklyShop 🛒
+# WeeklyShop 🛒
 
 Set it once. Shop every week.
 
