@@ -1,4 +1,4 @@
-# WeeklyShop Roadmap
+# WeeklyShop Roadmap 🏁──🎯──✅
 
 v0.1 – Local MVP Foundation ✅
 
