@@ -18,6 +18,10 @@ struct WeeklyListView: View {
 
     @State private var newItemName: String = ""
     @State private var showingAddSheet = false
+    
+    private var repository: WeeklyRepository {
+        SwiftDataWeeklyRepository(context: context)
+    }
 
     var body: some View {
         NavigationStack {
@@ -33,7 +37,7 @@ struct WeeklyListView: View {
                         ForEach(weeklyItems) { item in
                             HStack(spacing: 12) {
                                 Button {
-                                    item.isChecked.toggle()
+                                    repository.toggleItem(item)
                                 } label: {
                                     Image(systemName: item.isChecked ? "checkmark.circle.fill" : "circle")
                                         .foregroundStyle(item.isChecked ? .green : .gray)
@@ -52,7 +56,10 @@ struct WeeklyListView: View {
             .navigationTitle("WeeklyShop")
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
-                    Button("Reset Week") { resetWeek() }
+                    Button("Reset Week") {
+                        repository.resetWeek(masterItems: masterItems)
+                    }
+
                 }
                 ToolbarItem(placement: .topBarTrailing) {
                     Button { showingAddSheet = true } label: {
@@ -65,8 +72,9 @@ struct WeeklyListView: View {
             }
             .onAppear {
                 seedCatalogIfNeeded()
+
                 if weeklyItems.isEmpty {
-                    resetWeek()
+                    repository.resetWeek(masterItems: masterItems)
                 }
             }
         }
@@ -128,7 +136,8 @@ struct WeeklyListView: View {
         // Optional: prevent duplicates in weekly list
         let alreadyInWeekly = weeklyItems.contains { $0.name.lowercased() == trimmed.lowercased() }
         if !alreadyInWeekly {
-            context.insert(WeeklyItem(name: trimmed, isChecked: false))
+            repository.addItem(name: trimmed)
+
         }
 
         if alsoSaveToCatalog {
@@ -143,19 +152,7 @@ struct WeeklyListView: View {
     }
 
     private func deleteWeeklyItems(at offsets: IndexSet) {
-        for index in offsets {
-            context.delete(weeklyItems[index])
-        }
-    }
-
-    private func resetWeek() {
-        // Delete all weekly items
-        weeklyItems.forEach { context.delete($0) }
-
-        // Recreate from Master list (persistent)
-        for m in masterItems {
-            context.insert(WeeklyItem(name: m.name, isChecked: false))
-        }
+        repository.delete(at: offsets, from: weeklyItems)
     }
 
     private func seedCatalogIfNeeded() {
