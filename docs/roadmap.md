@@ -1,71 +1,86 @@
-# WeeklyShop Roadmap
+WeeklyShop Roadmap
 
-This roadmap outlines the planned development stages from MVP to full release.
+v0.1 – Local MVP Foundation ✅
 
-The focus is on delivering value early while keeping the architecture simple and scalable.
-
----
-
-## v0.1 — Local MVP Foundation ✅
 Status: Completed
 
 Goal: Establish core app structure and navigation.
 
 Completed features:
+
 - SwiftUI iOS project setup
-- Tab-based navigation (Weekly, Master, Settings)
-- Core data model (ShoppingItem)
-- Clean project architecture
+- Tab-based navigation
+- Core data models
+- Weekly reset logic
+- Stable persistent storage
 
 Result:
-A stable app foundation ready for feature development.
+A functional, repeatable weekly shopping experience.
 
 ---
 
-## v0.2 — Family Sharing
+v0.2 – Architecture Refactor ✅
+
+Status: Completed
+
+Goal: Prepare the app for scalability and real-time sync.
+
+Completed features:
+
+- MVVM implementation
+- Repository pattern
+- Async-ready data layer
+- Session foundation for future authentication
+- Clean initialization lifecycle
+
+Result:
+App is backend-ready and structured for future expansion.
+
+---
+
+v0.3 – Family Sharing (In Progress)
+
 Goal: Enable real-time collaboration between household members.
 
-Key features:
-- Household creation
-- Invite members
-- Shared weekly list
-- Real-time updates across devices
-- Conflict handling (initial: last write wins)
+Planned features:
+
+- Firebase Authentication
+- Family creation
+- Invite codes
+- Role-based permissions (Parent / Member)
+- Shared family lists
+- Real-time Firestore updates
 
 Success criteria:
+
 - Multiple users can edit the same list
-- Changes sync within seconds
-- No major data conflicts
+- Changes sync across devices instantly
+- Role-based access enforced securely
 
 ---
 
-## v0.3 — UX Polish
-Goal: Improve usability, performance, and visual quality.
+v0.4 – UX Polish
 
-Key features:
+Goal: Improve usability and production quality.
+
+Planned features:
+
 - Home screen widgets
-- Optional reminders
+- Reminder notifications
 - UI animations and transitions
 - Accessibility improvements
-- Performance optimizations
-
-Success criteria:
-- Smooth, responsive UI
-- App feels production-ready
+- Performance optimisations
 
 ---
 
-## v1.0 — App Store Release
-Goal: Public release on the App Store.
+v1.0 – App Store Release
 
-Key features:
+Goal: Public release.
+
+Planned features:
+
 - Onboarding flow
 - Privacy policy
-- App Store screenshots
 - TestFlight beta testing
-- Stability and bug fixes
-
-Success criteria:
-- Approved on App Store
-- Stable performance
-- Positive early user feedback
+- Stability hardening
+- App Store optimisation
