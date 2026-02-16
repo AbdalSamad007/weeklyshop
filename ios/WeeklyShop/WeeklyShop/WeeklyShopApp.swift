@@ -10,12 +10,19 @@ import SwiftData
 
 @main
 struct WeeklyShopApp: App {
+
+    @StateObject private var session = AppSession()
+
     var body: some Scene {
         WindowGroup {
-            RootTabView()
+            MainAppView()
+                .environmentObject(session)
         }
-        .modelContainer(for: [MasterItem.self, WeeklyItem.self, CatalogItem.self])
+        .modelContainer(for: [WeeklyItem.self, MasterItem.self, CatalogItem.self])
     }
 }
+
+
+
 
 

@@ -1,14 +1,14 @@
 //
-//  RootTabView.swift
+//  MainAppView.swift
 //  WeeklyShop
 //
-//  Created by Abd-Al-Samad Syed on 11/02/2026.
+//  Created by Abd-Al-Samad Syed on 16/02/2026.
 //
 
 import SwiftUI
 import SwiftData
 
-struct RootTabView: View {
+struct MainAppView: View {
 
     @Environment(\.modelContext) private var context
 

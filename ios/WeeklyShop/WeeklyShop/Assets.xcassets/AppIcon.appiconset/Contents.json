@@ -1,7 +1,7 @@
 {
   "images" : [
     {
-      "filename" : "Shopping cart with checkmark icon (1).png",
+      "filename" : "Minimalist shopping cart with checkmark.png",
       "idiom" : "universal",
       "platform" : "ios",
       "size" : "1024x1024"
@@ -13,7 +13,7 @@
           "value" : "dark"
         }
       ],
-      "filename" : "Shopping cart with checkmark icon (1) 1.png",
+      "filename" : "Minimalist shopping cart with checkmark 1.png",
       "idiom" : "universal",
       "platform" : "ios",
       "size" : "1024x1024"
@@ -25,7 +25,7 @@
           "value" : "tinted"
         }
       ],
-      "filename" : "Shopping cart with checkmark icon (1) 2.png",
+      "filename" : "Minimalist shopping cart with checkmark 2.png",
       "idiom" : "universal",
       "platform" : "ios",
       "size" : "1024x1024"

@@ -7,26 +7,22 @@
 //
 
 import SwiftUI
-import SwiftData
 
 struct WeeklyListView: View {
-    @Environment(\.modelContext) private var context
-
-    @Query(sort: \WeeklyItem.name) private var weeklyItems: [WeeklyItem]
-    @Query(sort: \MasterItem.name) private var masterItems: [MasterItem]
-    @Query(sort: \CatalogItem.name) private var catalogItems: [CatalogItem]
-
-    @State private var newItemName: String = ""
-    @State private var showingAddSheet = false
     
-    private var repository: WeeklyRepository {
-        SwiftDataWeeklyRepository(context: context)
+    @EnvironmentObject private var session: AppSession
+    @StateObject private var viewModel: WeeklyListViewModel
+
+    init(repository: WeeklyRepository) {
+        _viewModel = StateObject(
+            wrappedValue: WeeklyListViewModel(repository: repository)
+        )
     }
 
     var body: some View {
         NavigationStack {
             Group {
-                if weeklyItems.isEmpty {
+                if viewModel.weeklyItems.isEmpty {
                     ContentUnavailableView(
                         "No items this week",
                         systemImage: "cart",
@@ -34,10 +30,10 @@ struct WeeklyListView: View {
                     )
                 } else {
                     List {
-                        ForEach(weeklyItems) { item in
+                        ForEach(viewModel.weeklyItems) { item in
                             HStack(spacing: 12) {
                                 Button {
-                                    repository.toggleItem(item)
+                                    viewModel.toggleItem(item)
                                 } label: {
                                     Image(systemName: item.isChecked ? "checkmark.circle.fill" : "circle")
                                         .foregroundStyle(item.isChecked ? .green : .gray)
@@ -49,7 +45,7 @@ struct WeeklyListView: View {
                                     .foregroundStyle(item.isChecked ? .secondary : .primary)
                             }
                         }
-                        .onDelete(perform: deleteWeeklyItems)
+                        .onDelete { viewModel.delete(at: $0) }
                     }
                 }
             }
@@ -57,42 +53,41 @@ struct WeeklyListView: View {
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     Button("Reset Week") {
-                        repository.resetWeek(masterItems: masterItems)
+                        viewModel.resetWeek()
                     }
-
                 }
+
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button { showingAddSheet = true } label: {
+                    Button {
+                        viewModel.showingAddSheet = true
+                    } label: {
                         Image(systemName: "plus")
                     }
                 }
             }
-            .sheet(isPresented: $showingAddSheet) {
+            .sheet(isPresented: $viewModel.showingAddSheet) {
                 addItemSheet
             }
-            .onAppear {
-                seedCatalogIfNeeded()
-
-                if weeklyItems.isEmpty {
-                    repository.resetWeek(masterItems: masterItems)
-                }
-            }
+            
         }
     }
 
     private var addItemSheet: some View {
         NavigationStack {
-            let query = newItemName.trimmingCharacters(in: .whitespacesAndNewlines)
+
+            let query = viewModel.newItemName
+                .trimmingCharacters(in: .whitespacesAndNewlines)
+
             let lowerQuery = query.lowercased()
 
-            let suggestions = catalogItems
+            let suggestions = viewModel.catalogItems
                 .map { $0.name }
                 .filter { lowerQuery.isEmpty || $0.lowercased().contains(lowerQuery) }
                 .prefix(30)
 
             List {
                 Section {
-                    TextField("Search item", text: $newItemName)
+                    TextField("Search item", text: $viewModel.newItemName)
                         .textFieldStyle(.roundedBorder)
                         .textInputAutocapitalization(.words)
                 }
@@ -101,18 +96,20 @@ struct WeeklyListView: View {
                     Section("Suggestions") {
                         ForEach(Array(suggestions), id: \.self) { suggestion in
                             Button(suggestion) {
-                                addWeeklyItem(named: suggestion, alsoSaveToCatalog: false)
+                                viewModel.addWeeklyItem(named: suggestion)
                             }
                         }
                     }
                 }
 
-                let existsInCatalog = catalogItems.contains { $0.name.lowercased() == lowerQuery }
+                let existsInCatalog = viewModel.catalogItems.contains {
+                    $0.name.lowercased() == lowerQuery
+                }
 
                 if !query.isEmpty && !existsInCatalog {
                     Section {
                         Button("Add \"\(query)\"") {
-                            addWeeklyItem(named: query, alsoSaveToCatalog: true)
+                            viewModel.addWeeklyItem(named: query, alsoSaveToCatalog: true)
                         }
                     }
                 }
@@ -121,144 +118,14 @@ struct WeeklyListView: View {
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") {
-                        showingAddSheet = false
-                        newItemName = ""
+                        viewModel.showingAddSheet = false
+                        viewModel.newItemName = ""
                     }
                 }
             }
         }
     }
-
-    private func addWeeklyItem(named name: String, alsoSaveToCatalog: Bool) {
-        let trimmed = name.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !trimmed.isEmpty else { return }
-
-        // Optional: prevent duplicates in weekly list
-        let alreadyInWeekly = weeklyItems.contains { $0.name.lowercased() == trimmed.lowercased() }
-        if !alreadyInWeekly {
-            repository.addItem(name: trimmed)
-
-        }
-
-        if alsoSaveToCatalog {
-            let alreadyInCatalog = catalogItems.contains { $0.name.lowercased() == trimmed.lowercased() }
-            if !alreadyInCatalog {
-                context.insert(CatalogItem(name: trimmed))
-            }
-        }
-
-        newItemName = ""
-        showingAddSheet = false
-    }
-
-    private func deleteWeeklyItems(at offsets: IndexSet) {
-        repository.delete(at: offsets, from: weeklyItems)
-    }
-
-    private func seedCatalogIfNeeded() {
-        guard catalogItems.isEmpty else { return }
-
-        let starters = [
-            // Dairy & Eggs
-            "Milk", "Skimmed Milk", "Semi-Skimmed Milk", "Whole Milk",
-            "Eggs", "Butter", "Cheese", "Cheddar", "Mozzarella",
-            "Yogurt", "Greek Yogurt", "Cream", "Sour Cream",
-
-            // Bread & Bakery
-            "Bread", "Wholemeal Bread", "White Bread",
-            "Bagels", "Wraps", "Pitta Bread",
-            "Croissants", "Crumpets", "Muffins",
-
-            // Fruit
-            "Apples", "Bananas", "Oranges", "Grapes",
-            "Strawberries", "Blueberries", "Pineapple",
-            "Mango", "Peaches", "Pears", "Lemons", "Limes",
-
-            // Vegetables
-            "Potatoes", "Sweet Potatoes",
-            "Onions", "Red Onions", "Garlic",
-            "Carrots", "Broccoli", "Cauliflower",
-            "Spinach", "Lettuce", "Cucumber",
-            "Tomatoes", "Cherry Tomatoes",
-            "Bell Peppers", "Chilli Peppers",
-            "Courgette", "Aubergine", "Mushrooms",
-
-            // Meat & Poultry
-            "Chicken Breast", "Chicken Thighs",
-            "Minced Beef", "Steak",
-            "Lamb", "Turkey",
-            "Bacon", "Sausages",
-
-            // Fish
-            "Salmon", "Tuna", "Cod",
-            "Prawns", "Fish Fingers",
-
-            // Grains & Carbs
-            "Rice", "Brown Rice", "Basmati Rice",
-            "Pasta", "Spaghetti", "Penne",
-            "Noodles", "Couscous", "Quinoa",
-            "Oats", "Cereal",
-
-            // Tinned & Jarred
-            "Baked Beans", "Chickpeas", "Kidney Beans",
-            "Tinned Tomatoes", "Sweetcorn",
-            "Tuna (Tinned)", "Soup",
-            "Pasta Sauce", "Pesto",
-
-            // Frozen
-            "Frozen Peas", "Frozen Vegetables",
-            "Frozen Chicken", "Frozen Pizza",
-            "Ice Cream",
-
-            // Snacks
-            "Crisps", "Chocolate",
-            "Biscuits", "Cookies",
-            "Popcorn", "Nuts",
-
-            // Breakfast & Spreads
-            "Jam", "Honey",
-            "Peanut Butter", "Chocolate Spread",
-
-            // Drinks
-            "Water", "Sparkling Water",
-            "Orange Juice", "Apple Juice",
-            "Soft Drinks",
-            "Tea", "Coffee",
-
-            // Baking
-            "Flour", "Sugar",
-            "Brown Sugar", "Icing Sugar",
-            "Baking Powder",
-            "Vanilla Extract",
-            "Chocolate Chips",
-
-            // Cooking Essentials
-            "Olive Oil", "Vegetable Oil",
-            "Salt", "Black Pepper",
-            "Mixed Herbs", "Curry Powder",
-            "Paprika", "Chilli Flakes",
-            "Soy Sauce", "Vinegar",
-
-            // Household
-            "Toilet Paper", "Kitchen Roll",
-            "Washing Up Liquid",
-            "Laundry Detergent",
-            "Fabric Softener",
-            "Bin Bags",
-            "Cleaning Spray",
-            "Sponges",
-
-            // Personal Care
-            "Shampoo", "Conditioner",
-            "Body Wash", "Soap",
-            "Toothpaste", "Toothbrush",
-            "Deodorant",
-            "Razor Blades"
-        ]
-
-        starters.forEach { context.insert(CatalogItem(name: $0)) }
-    }
-
 }
+
 
 
