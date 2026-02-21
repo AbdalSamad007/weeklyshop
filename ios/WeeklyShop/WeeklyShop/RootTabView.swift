@@ -1,20 +1,11 @@
-//
-//  RootTabView.swift
-//  WeeklyShop
-//
-//  Created by Abd-Al-Samad Syed on 11/02/2026.
-//
-
 import SwiftUI
-import SwiftData
 
 struct RootTabView: View {
 
-    @Environment(\.modelContext) private var context
+    let repository: WeeklyRepository
+    let scope: ListScope
 
     var body: some View {
-
-        let repository = SwiftDataWeeklyRepository(context: context)
 
         TabView {
 
@@ -23,12 +14,21 @@ struct RootTabView: View {
                     Label("Weekly", systemImage: "cart")
                 }
 
-            MasterListView()
-                .tabItem {
-                    Label("Master", systemImage: "list.bullet")
-                }
+            if scope == .family {
+                MasterListView()
+                    .tabItem {
+                        Label("Master", systemImage: "list.bullet")
+                    }
+            }
+            
+            if scope == .family {
+                ActivityView()
+                    .tabItem {
+                        Label("Activity", systemImage: "clock.arrow.circlepath")
+                    }
+            }
 
-            SettingsView()
+            SettingsView(scope: scope)
                 .tabItem {
                     Label("Settings", systemImage: "gearshape")
                 }

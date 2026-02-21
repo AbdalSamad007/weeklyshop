@@ -7,11 +7,17 @@
 //
 
 import SwiftUI
+import UIKit
 
 struct WeeklyListView: View {
     
     @EnvironmentObject private var session: AppSession
     @StateObject private var viewModel: WeeklyListViewModel
+    @EnvironmentObject var authService: AuthService
+    
+    private let deleteHaptic = UIImpactFeedbackGenerator(style: .medium)
+    private let undoHaptic = UIImpactFeedbackGenerator(style: .light)
+    private let toggleHaptic = UIImpactFeedbackGenerator(style: .light)
 
     init(repository: WeeklyRepository) {
         _viewModel = StateObject(
@@ -21,6 +27,17 @@ struct WeeklyListView: View {
 
     var body: some View {
         NavigationStack {
+
+            VStack(spacing: 4) {
+                Text("DEBUG FAMILY ID")
+                    .font(.caption)
+                    .foregroundColor(.gray)
+
+                Text(authService.familyId ?? "No family")
+                    .font(.caption2)
+                    .foregroundColor(.red)
+            }
+
             Group {
                 if viewModel.weeklyItems.isEmpty {
                     ContentUnavailableView(
@@ -33,19 +50,27 @@ struct WeeklyListView: View {
                         ForEach(viewModel.weeklyItems) { item in
                             HStack(spacing: 12) {
                                 Button {
+                                    toggleHaptic.impactOccurred()
                                     viewModel.toggleItem(item)
                                 } label: {
                                     Image(systemName: item.isChecked ? "checkmark.circle.fill" : "circle")
                                         .foregroundStyle(item.isChecked ? .green : .gray)
+                                        .scaleEffect(item.isChecked ? 1.1 : 1.0)
+                                        .animation(.spring(response: 0.3, dampingFraction: 0.6), value: item.isChecked)
                                 }
                                 .buttonStyle(.plain)
 
                                 Text(item.name)
                                     .strikethrough(item.isChecked)
                                     .foregroundStyle(item.isChecked ? .secondary : .primary)
+                                    .opacity(item.isChecked ? 0.6 : 1.0)
+                                    .animation(.easeInOut(duration: 0.2), value: item.isChecked)
                             }
                         }
-                        .onDelete { viewModel.delete(at: $0) }
+                        .onDelete { offsets in
+                            deleteHaptic.impactOccurred()
+                            viewModel.delete(at: offsets)
+                        }
                     }
                 }
             }
@@ -68,9 +93,57 @@ struct WeeklyListView: View {
             .sheet(isPresented: $viewModel.showingAddSheet) {
                 addItemSheet
             }
-            
+
         }
-    }
+        .overlay(alignment: .bottom) {
+            if let deleted = viewModel.recentlyDeletedItem {
+                HStack(spacing: 16) {
+
+                    Image(systemName: "trash")
+                        .foregroundStyle(.white)
+                        .padding(8)
+                        .background(Color.red)
+                        .clipShape(Circle())
+
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("Item Deleted")
+                            .font(.subheadline.weight(.semibold))
+
+                        Text(deleted.name)
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+
+                    Spacer()
+
+                    Button {
+                        undoHaptic.impactOccurred()
+                        viewModel.undoDelete()
+                    } label: {
+                        Text("Undo")
+                            .fontWeight(.semibold)
+                    }
+                    .buttonStyle(.bordered)
+                    .tint(.blue)
+                }
+                .padding()
+                .background(
+                    RoundedRectangle(cornerRadius: 20, style: .continuous)
+                        .fill(.ultraThinMaterial)
+                )
+                .shadow(color: .black.opacity(0.15), radius: 10, x: 0, y: 5)
+                .padding(.horizontal)
+                .padding(.bottom, 20)
+                .transition(
+                    .move(edge: .bottom)
+                    .combined(with: .opacity)
+                )
+                .animation(
+                    .spring(response: 0.4, dampingFraction: 0.85),
+                    value: viewModel.recentlyDeletedItem != nil
+                )
+            }
+        }    }
 
     private var addItemSheet: some View {
         NavigationStack {
@@ -126,6 +199,5 @@ struct WeeklyListView: View {
         }
     }
 }
-
 
 

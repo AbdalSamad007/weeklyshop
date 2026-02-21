@@ -20,7 +20,7 @@ final class MasterItem {
 }
 
 @Model
-final class WeeklyItem {
+final class LocalWeeklyItem {
     var id: UUID
     var name: String
     var isChecked: Bool

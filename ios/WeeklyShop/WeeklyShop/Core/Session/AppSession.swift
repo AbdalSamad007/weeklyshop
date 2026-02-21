@@ -13,7 +13,7 @@ final class AppSession: ObservableObject {
 
     @Published var currentUserId: String?
     @Published var familyId: String?
-    @Published var role: UserRole = .parent
+    @Published var role: UserRole = .member
     @Published var selectedListType: ListType = .personal
 }
 

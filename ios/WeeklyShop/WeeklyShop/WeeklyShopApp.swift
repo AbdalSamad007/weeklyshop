@@ -7,19 +7,27 @@
 
 import SwiftUI
 import SwiftData
+import Firebase
 
 @main
 struct WeeklyShopApp: App {
 
     @StateObject private var session = AppSession()
+    @StateObject private var authService = AuthService()
+
+    init() {
+        FirebaseApp.configure()
+        _authService = StateObject(wrappedValue: AuthService())
+    }
 
     var body: some Scene {
         WindowGroup {
-            MainAppView()
+            RootView()
                 .environmentObject(session)
+                .environmentObject(authService)
         }
-        .modelContainer(for: [WeeklyItem.self, MasterItem.self, CatalogItem.self])
     }
+
 }
 
 
